@@ -1,0 +1,54 @@
+package conf.rules;
+
+import com.liaozl.demo.drools.entity.TopNews;
+import com.liaozl.demo.drools.enums.NewsTypeEnum;
+import com.liaozl.demo.drools.enums.SortTypeEnum;
+
+rule "topNews-asc-count(>=0 && <150)"
+    when
+        news:TopNews(NewsTypeEnum.TOP.equals(newsType) && SortTypeEnum.ASC.equals(sortType) && count >=0 && count < 150)
+    then
+        int score = news.getScore() * 2;
+        news.setScore(score);
+end
+
+rule "topNews-asc-count(>=150 && <300)"
+    when
+        news:TopNews(NewsTypeEnum.TOP.equals(newsType) && SortTypeEnum.ASC.equals(sortType) && count >=150 && count < 300)
+    then
+        int score = news.getScore() * 3;
+        news.setScore(score);
+end
+
+rule "topNews-asc-count(>=300)"
+    when
+        news:TopNews(NewsTypeEnum.TOP.equals(newsType) && SortTypeEnum.ASC.equals(sortType) && count >=300)
+    then
+        int score = news.getScore() * 4;
+        news.setScore(score);
+end
+
+rule "topNews-desc-count(>=0 && <150)"
+    when
+        news:TopNews(NewsTypeEnum.TOP.equals(newsType) && SortTypeEnum.DESC.equals(sortType) && count >=0 && count < 150)
+    then
+        int score = news.getScore() * 5;
+        news.setScore(score);
+end
+
+rule "topNews-desc-count(>=150 && <300)"
+    when
+        news:TopNews(NewsTypeEnum.TOP.equals(newsType) && SortTypeEnum.DESC.equals(sortType) && count >=150 && count < 300)
+    then
+        int score = news.getScore() * 6;
+        news.setScore(score);
+end
+
+rule "topNews-desc-count(>=300)"
+    when
+        news:TopNews(NewsTypeEnum.TOP.equals(newsType) && SortTypeEnum.DESC.equals(sortType) && count >=300)
+    then
+        int score = news.getScore() * 7;
+        news.setScore(score);
+end
+

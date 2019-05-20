@@ -46,5 +46,11 @@
             <artifactId>kie-api</artifactId>
             <version>${drools.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.kie</groupId>
+            <artifactId>kie-spring</artifactId>
+            <version>${drools.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

@@ -1,0 +1,63 @@
+package conf.rules;
+
+import com.liaozl.demo.drools.entity.HotNews;
+import com.liaozl.demo.drools.service.CalculateService;
+import com.liaozl.demo.drools.enums.NewsTypeEnum;
+import com.liaozl.demo.drools.enums.SortTypeEnum;
+
+global CalculateService calculateService;
+
+function int calculateScore(HotNews hotNews) {
+    double rate = 0d;
+    if(hotNews.getCount()>=0 && hotNews.getCount()<50){
+        rate = 0.1d;
+    } else if(hotNews.getCount()>=50 && hotNews.getCount()<100){
+        rate = 0.5d;
+    } else if(hotNews.getCount()>=100 && hotNews.getCount()<200){
+        rate = 0.7d;
+    } else if(hotNews.getCount()>=200){
+        rate = 1.5d;
+    }
+
+    int score = (int) (hotNews.getCount() * rate);
+
+    System.out.println("计算hot分数: count=" + hotNews.getCount() + ", rate=" + rate + ", score=" + score);
+
+    return score;
+}
+
+rule "hotNews-hot-asc"
+    salience 2 // 设置优先级，值越大优先级越高
+    no-loop true
+    when
+        news:HotNews(NewsTypeEnum.HOT.equals(newsType) && SortTypeEnum.ASC.equals(sortType))
+    then
+        System.out.println("=====================hotNews-hot-asc=========star============");
+        // 获取业务参数
+        int count = calculateService.getAscCount(news);
+        news.setCount(count);
+
+        // 计算分数
+        int score = calculateScore(news);
+        news.setScore(score);
+
+        System.out.println("=====================hotNews-hot-asc=========end============");
+end
+
+rule "hotNews-hot-desc"
+    salience 1 // 设置优先级，值越大优先级越高
+    no-loop true
+    when
+        news:HotNews(NewsTypeEnum.HOT.equals(newsType) && SortTypeEnum.DESC.equals(sortType))
+    then
+        System.out.println("=====================hotNews-hot-desc========start=============");
+         // 获取业务参数
+        int count = calculateService.getDescCount(news);
+        news.setCount(count);
+
+        // 计算分数
+        int score = calculateScore(news);
+        news.setScore(score);
+
+        System.out.println("=====================hotNews-hot-desc========end=============");
+end
