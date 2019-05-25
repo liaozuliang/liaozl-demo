@@ -81,4 +81,28 @@
         </resources>
     </build>
 
+    <!--指定打包环境(mvn clean install -Pdev -Dmaven.test.skip=true)-->
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <project.active>dev</project.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <project.active>test</project.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>online</id>
+            <properties>
+                <project.active>online</project.active>
+            </properties>
+        </profile>
+    </profiles>
 </project>
