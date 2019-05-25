@@ -12,6 +12,8 @@
     <groupId>com.liaozl.demo</groupId>
     <artifactId>drools-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
     <name>drools-demo</name>
     <description>drools-demo</description>
 
