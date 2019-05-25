@@ -30,6 +30,7 @@
     <modules>
         <module>drools-demo</module>
         <module>mybatis-demo</module>
+        <module>kafka-demo</module>
     </modules>
 
     <dependencies>
