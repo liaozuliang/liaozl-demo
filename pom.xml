@@ -31,6 +31,7 @@
         <module>drools-demo</module>
         <module>mybatis-demo</module>
         <module>kafka-demo</module>
+        <module>mongo-demo</module>
     </modules>
 
     <dependencies>
