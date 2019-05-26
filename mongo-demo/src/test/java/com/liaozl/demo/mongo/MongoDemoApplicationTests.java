@@ -119,4 +119,22 @@ public class MongoDemoApplicationTests {
         company = companyMongoDao.findById(3);
         log.info("new company:{}", JSON.toJSONString(company));
     }
+
+    @Test
+    public void test3() {
+        List<Employee> employeeList = employeeMongoDao.findByNameStartingWith("我是员工");
+        log.info("employeeList:{}", JSON.toJSONString(employeeList));
+
+        List<Employee> employeeList2 = employeeMongoDao.findBySexAndAge((byte) 1, 11);
+        log.info("employeeList2:{}", JSON.toJSONString(employeeList2));
+
+        List<Employee> employeeList3 = employeeMongoDao.findBySex((byte) 1);
+        log.info("employeeList3:{}", JSON.toJSONString(employeeList3));
+
+        List<Employee> employeeList4 = employeeMongoDao.findByAgeBetween2(33, 50);
+        log.info("employeeList4:{}", JSON.toJSONString(employeeList4));
+
+        List<Employee> employeeList5 = employeeMongoDao.findByAgeBetween1To25();
+        log.info("employeeList5:{}", JSON.toJSONString(employeeList5));
+    }
 }
