@@ -1,5 +1,6 @@
 package com.liaozl.demo.kafka.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.liaozl.demo.kafka.dto.KafkaTopic;
 import kafka.admin.AdminUtils;
 import kafka.admin.RackAwareMode;
@@ -18,12 +19,28 @@ import java.util.Properties;
  */
 public class KafkaUtil {
 
-    public static void aa() {
+    public static void main(String[] args) {
+        String zkConnect="172.10.4.133:2181";
+        String topicName = "short_recommend_calc";
+        if (!existsTopic(zkConnect, topicName)) {
+            KafkaTopic topic = new KafkaTopic();
+            topic.setTopicName(topicName);
+            topic.setPartition(1);
+            topic.setReplication(2);
+            topic.setDesc("短期资讯推荐计算");
+            createTopic(zkConnect, topic);
+            System.out.println(existsTopic(zkConnect, topicName));
+        } else {
+            Properties props = getTopicProperties(zkConnect, topicName);
+            System.out.println("====props:" + JSON.toJSONString(props));
+        }
     }
 
     public static boolean existsTopic(String zkConnect, String topicName) {
         ZkUtils zkUtils = ZkUtils.apply(zkConnect, 30000, 30000, JaasUtils.isZkSecurityEnabled());
-        return AdminUtils.topicExists(zkUtils, topicName);
+        boolean exist = AdminUtils.topicExists(zkUtils, topicName);
+        zkUtils.close();
+        return exist;
     }
 
     public static void createTopic(String zkConnect, KafkaTopic topic) {
@@ -37,6 +54,13 @@ public class KafkaUtil {
         ZkUtils zkUtils = ZkUtils.apply(zkConnect, 30000, 30000, JaasUtils.isZkSecurityEnabled());
         AdminUtils.deleteTopic(zkUtils, topic.getTopicName());
         zkUtils.close();
+    }
+
+    public static Properties getTopicProperties(String zkConnect, String topicName) {
+        ZkUtils zkUtils = ZkUtils.apply(zkConnect, 30000, 30000, JaasUtils.isZkSecurityEnabled());
+        Properties props = AdminUtils.fetchEntityConfig(zkUtils, ConfigType.Topic(), topicName);
+        zkUtils.close();
+        return props;
     }
 
     public static void changeTopic(String zkConnect, String topicName, Map<String, Object> topicProps) {
