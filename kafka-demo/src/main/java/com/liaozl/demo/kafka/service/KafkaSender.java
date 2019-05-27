@@ -18,4 +18,9 @@ public class KafkaSender {
         log.info("message send success[topic:{}, message:{}]", topic, JSON.toJSONString(message));
     }
 
+    public void send(String topic, String messageKey, Object message) {
+        kafkaTemplate.send(topic, messageKey, JSON.toJSONString(message));
+        log.info("message send success[topic:{}, messageKey:{}, message:{}]", topic, messageKey, JSON.toJSONString(message));
+    }
+
 }

@@ -34,6 +34,7 @@ public class KafkaDemoApplicationTests {
                 news.setCreateTime(new Date());
 
                 kafkaSender.send(KafkaTopics.VIEW_NEWS, news);
+                //kafkaSender.send(KafkaTopics.VIEW_NEWS, "mews_" + news.getId(), news);
 
                 Thread.sleep(3000);
             } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.liaozl.demo.kafka.listener;
 
+import com.alibaba.fastjson.JSON;
 import com.liaozl.demo.kafka.constants.KafkaTopics;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -17,7 +18,7 @@ public class UserLoginListener {
     @KafkaListener(topics = {KafkaTopics.USER_LOGIN, KafkaTopics.VIEW_NEWS}, groupId = "myGroupId")
     public void receive(ConsumerRecord<?, ?> record) {
         if (record != null) {
-            log.info("UserLoginListener 收到消息, message:{}", record.value().toString());
+            log.info("UserLoginListener 收到消息, messageKey:{}, message:{}, record:{}", record.key(), record.value().toString(), JSON.toJSONString(record));
         }
     }
 
