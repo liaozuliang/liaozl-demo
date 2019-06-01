@@ -20,7 +20,7 @@ import java.util.Properties;
 public class KafkaUtil {
 
     public static void main(String[] args) {
-        String zkConnect="172.10.4.133:2181";
+        String zkConnect = "172.10.4.133:2181";
         String topicName = "short_recommend_calc";
         if (!existsTopic(zkConnect, topicName)) {
             KafkaTopic topic = new KafkaTopic();
@@ -74,6 +74,12 @@ public class KafkaUtil {
 
         AdminUtils.changeTopicConfig(zkUtils, topicName, props);
 
+        zkUtils.close();
+    }
+
+    public static void changeTopicPartition(String zkConnect, String topicName, int paritiionNum) {
+        ZkUtils zkUtils = ZkUtils.apply(zkConnect, 30000, 30000, JaasUtils.isZkSecurityEnabled());
+        AdminUtils.addPartitions$default$5();
         zkUtils.close();
     }
 
