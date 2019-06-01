@@ -7,6 +7,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+/**
+ * 自动确认方式
+ */
 @Slf4j
 @Service
 public class ViewNewsListener {
