@@ -32,6 +32,7 @@
         <module>mybatis-demo</module>
         <module>kafka-demo</module>
         <module>mongo-demo</module>
+        <module>disconf-demo</module>
     </modules>
 
     <dependencies>
