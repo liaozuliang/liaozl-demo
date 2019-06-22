@@ -33,6 +33,7 @@
         <module>kafka-demo</module>
         <module>mongo-demo</module>
         <module>disconf-demo</module>
+        <module>elasticsearch-demo</module>
     </modules>
 
     <dependencies>
