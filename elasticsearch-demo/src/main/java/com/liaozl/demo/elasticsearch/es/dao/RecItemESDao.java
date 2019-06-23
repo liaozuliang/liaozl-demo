@@ -3,7 +3,6 @@ package com.liaozl.demo.elasticsearch.es.dao;
 import com.liaozl.demo.elasticsearch.es.entity.RecItem;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,4 +32,6 @@ public interface RecItemESDao extends ElasticsearchRepository<RecItem, String> {
     List<RecItem> findByNewsIdOrderByReadCountDesc(long newsId);
 
     List<RecItem> findByCreateTimeBefore(long date);
+
+    List<RecItem> findByUpdateTimeBefore(String date);
 }

@@ -22,12 +22,13 @@ public class EsCommonDaoTest {
     private EsCommonDao esCommonDao;
 
     @Test
+    public void testDeleteIndex() {
+        esCommonDao.deleteIndex(RecItem.class);
+    }
+
+    @Test
     public void testCreateIndex() {
         esCommonDao.createIndex(RecItem.class);
     }
 
-    @Test
-    public void testDeleteIndex() {
-        esCommonDao.deleteIndex(RecItem.class);
-    }
 }
