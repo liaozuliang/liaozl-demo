@@ -282,4 +282,19 @@ public class RecItemESDaoTest {
         double distance = GeoDistance.ARC.calculate(39.570178147550735, 117.28976716015623, 38.570178147550735, 118.28976716015623, DistanceUnit.KILOMETERS);
         log.info("===============calc distance====={}公里", distance);
     }
+
+    @Test
+    public void test2() {
+        recItemESDao.save(null);
+        recItemESDao.findById("1");
+        recItemESDao.findAll();
+        recItemESDao.count();
+        recItemESDao.delete(null);
+        recItemESDao.existsById("1");
+
+        recItemESDao.findAll(Sort.by(Sort.Order.asc("isViewed")));
+        recItemESDao.findAll(PageRequest.of(0, 20));
+
+        recItemESDao.deleteAll();
+    }
 }
