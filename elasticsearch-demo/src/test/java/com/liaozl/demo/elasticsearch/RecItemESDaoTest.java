@@ -7,11 +7,18 @@ import com.liaozl.demo.elasticsearch.es.entity.RecItem;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.geo.GeoPoint;
+import org.elasticsearch.common.lucene.search.function.CombineFunction;
+import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction;
 import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
+import org.elasticsearch.index.query.functionscore.GaussDecayFunctionBuilder;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilder;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
 import org.elasticsearch.search.aggregations.metrics.avg.InternalAvg;
@@ -31,6 +38,7 @@ import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -281,6 +289,39 @@ public class RecItemESDaoTest {
         // 计算两点距离
         double distance = GeoDistance.ARC.calculate(39.570178147550735, 117.28976716015623, 38.570178147550735, 118.28976716015623, DistanceUnit.KILOMETERS);
         log.info("===============calc distance====={}公里", distance);
+
+        // 自定义排序分值(发布时间越近、阅读数越多，排序越靠前)
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.termQuery("kewordList", "文化"));
+
+        FunctionScoreQueryBuilder.FilterFunctionBuilder[] filterFunctionBuilders = new FunctionScoreQueryBuilder.FilterFunctionBuilder[2];
+
+        // 阅读数
+        ScoreFunctionBuilder<FieldValueFactorFunctionBuilder> fieldValueScoreFunction = new FieldValueFactorFunctionBuilder("readCount");
+        ((FieldValueFactorFunctionBuilder) fieldValueScoreFunction).factor(1.1f);
+        ((FieldValueFactorFunctionBuilder) fieldValueScoreFunction).modifier(FieldValueFactorFunction.Modifier.LOG1P);
+        filterFunctionBuilders[0] = new FunctionScoreQueryBuilder.FilterFunctionBuilder(fieldValueScoreFunction);
+
+        // 发布时间衰减
+        String gaussFieldName = "createTime";
+        Object origin = new Date();
+        Object scale = "3h";
+        Object offset = "1h";
+        double decay = 0.5;
+        GaussDecayFunctionBuilder gaussDecayFunctionBuilder = ScoreFunctionBuilders.gaussDecayFunction(gaussFieldName, origin, scale, offset, decay);
+        filterFunctionBuilders[1] = new FunctionScoreQueryBuilder.FilterFunctionBuilder(gaussDecayFunctionBuilder);
+
+        FunctionScoreQueryBuilder functionScoreQueryBuilder = new FunctionScoreQueryBuilder(boolQueryBuilder, filterFunctionBuilders);
+        functionScoreQueryBuilder.boostMode(CombineFunction.MULTIPLY);
+
+        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withPageable(PageRequest.of(0, 100))
+                .withSort(SortBuilders.scoreSort().order(SortOrder.DESC))
+                .withQuery(functionScoreQueryBuilder).build();
+
+        recItemIterable = recItemESDao.search(searchQuery);
+        log.info("====testQuery===functionScoreQueryBuilder===={}", JSON.toJSONString(recItemIterable.iterator()));
+
     }
 
     @Test
