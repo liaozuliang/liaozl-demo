@@ -10,6 +10,7 @@ import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.common.lucene.search.function.CombineFunction;
 import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction;
+import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery;
 import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
@@ -315,6 +316,7 @@ public class RecItemESDaoTest {
         // 阅读数
         ScoreFunctionBuilder<FieldValueFactorFunctionBuilder> fieldValueScoreFunction = new FieldValueFactorFunctionBuilder("readCount");
         ((FieldValueFactorFunctionBuilder) fieldValueScoreFunction).factor(1.1f);
+        ((FieldValueFactorFunctionBuilder) fieldValueScoreFunction).missing(1);
         ((FieldValueFactorFunctionBuilder) fieldValueScoreFunction).modifier(FieldValueFactorFunction.Modifier.LOG1P);
         filterFunctionBuilders[0] = new FunctionScoreQueryBuilder.FilterFunctionBuilder(fieldValueScoreFunction);
 
@@ -328,7 +330,8 @@ public class RecItemESDaoTest {
         filterFunctionBuilders[1] = new FunctionScoreQueryBuilder.FilterFunctionBuilder(gaussDecayFunctionBuilder);
 
         FunctionScoreQueryBuilder functionScoreQueryBuilder = new FunctionScoreQueryBuilder(boolQueryBuilder, filterFunctionBuilders);
-        functionScoreQueryBuilder.boostMode(CombineFunction.MULTIPLY);
+        functionScoreQueryBuilder.scoreMode(FunctionScoreQuery.ScoreMode.MULTIPLY);
+        functionScoreQueryBuilder.boostMode(CombineFunction.REPLACE);
 
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withPageable(PageRequest.of(0, 100))
