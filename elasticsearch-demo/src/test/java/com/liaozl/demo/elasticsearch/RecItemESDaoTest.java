@@ -311,6 +311,10 @@ public class RecItemESDaoTest {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(QueryBuilders.termQuery("kewordList", "文化"));
 
+        calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        boolQueryBuilder.must(QueryBuilders.rangeQuery("createTime").gte(calendar.getTimeInMillis()).lte(System.currentTimeMillis()));
+
         FunctionScoreQueryBuilder.FilterFunctionBuilder[] filterFunctionBuilders = new FunctionScoreQueryBuilder.FilterFunctionBuilder[2];
 
         // 阅读数
@@ -342,6 +346,22 @@ public class RecItemESDaoTest {
         recItemIterable = recItemESDao.search(searchQuery);
         log.info("====testQuery===functionScoreQueryBuilder===={}", JSON.toJSONString(recItemIterable.iterator()));
 
+
+        functionScoreQueryBuilder = new FunctionScoreQueryBuilder(filterFunctionBuilders);
+        functionScoreQueryBuilder.scoreMode(FunctionScoreQuery.ScoreMode.MULTIPLY);
+        functionScoreQueryBuilder.boostMode(CombineFunction.REPLACE);
+
+        boolQueryBuilder.must(functionScoreQueryBuilder);
+
+        searchQuery = new NativeSearchQueryBuilder()
+                .withPageable(PageRequest.of(0, 100))
+                .withSort(SortBuilders.scoreSort().order(SortOrder.DESC))
+                .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC))
+                .withQuery(boolQueryBuilder).build();
+
+        recItemIterable = recItemESDao.search(searchQuery);
+        log.info("====testQuery===functionScoreQueryBuilder2===={}", JSON.toJSONString(recItemIterable.iterator()));
+
         calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -1);
         searchQuery = new NativeSearchQueryBuilder()
@@ -355,6 +375,16 @@ public class RecItemESDaoTest {
 
         List<String> idList = elasticsearchTemplate.queryForIds(searchQuery);
         log.info("====testQuery===queryForIds===={}", JSON.toJSONString(idList));
+
+        // 多条件查询(must:and, should:or)
+        boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.termQuery("kewordList", "文化"));
+        boolQueryBuilder.must(QueryBuilders.rangeQuery("createTime").gte(calendar.getTime().getTime()).lte(new Date().getTime()));
+        boolQueryBuilder.should(QueryBuilders.termQuery("kewordList", "云南"));
+        boolQueryBuilder.should(QueryBuilders.termQuery("kewordList", "云南2"));
+
+        recItemIterable = recItemESDao.search(boolQueryBuilder);
+        log.info("====testQuery===boolQuery===={}", JSON.toJSONString(recItemIterable.iterator()));
     }
 
     @Test
