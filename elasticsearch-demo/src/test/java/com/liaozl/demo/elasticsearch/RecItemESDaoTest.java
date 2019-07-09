@@ -315,7 +315,7 @@ public class RecItemESDaoTest {
 
         // 阅读数
         ScoreFunctionBuilder<FieldValueFactorFunctionBuilder> fieldValueScoreFunction = new FieldValueFactorFunctionBuilder("readCount");
-        ((FieldValueFactorFunctionBuilder) fieldValueScoreFunction).factor(1.1f);
+        ((FieldValueFactorFunctionBuilder) fieldValueScoreFunction).factor(10);
         ((FieldValueFactorFunctionBuilder) fieldValueScoreFunction).missing(1);
         ((FieldValueFactorFunctionBuilder) fieldValueScoreFunction).modifier(FieldValueFactorFunction.Modifier.LOG1P);
         filterFunctionBuilders[0] = new FunctionScoreQueryBuilder.FilterFunctionBuilder(fieldValueScoreFunction);
@@ -323,9 +323,9 @@ public class RecItemESDaoTest {
         // 发布时间衰减
         String gaussFieldName = "createTime";
         Object origin = new Date();
-        Object scale = "3h";
+        Object scale = "1d";
         Object offset = "1h";
-        double decay = 0.5;
+        double decay = 0.14;
         GaussDecayFunctionBuilder gaussDecayFunctionBuilder = ScoreFunctionBuilders.gaussDecayFunction(gaussFieldName, origin, scale, offset, decay);
         filterFunctionBuilders[1] = new FunctionScoreQueryBuilder.FilterFunctionBuilder(gaussDecayFunctionBuilder);
 
@@ -336,6 +336,7 @@ public class RecItemESDaoTest {
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withPageable(PageRequest.of(0, 100))
                 .withSort(SortBuilders.scoreSort().order(SortOrder.DESC))
+                .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC))
                 .withQuery(functionScoreQueryBuilder).build();
 
         recItemIterable = recItemESDao.search(searchQuery);
