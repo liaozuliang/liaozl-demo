@@ -342,6 +342,20 @@ public class RecItemESDaoTest {
         recItemIterable = recItemESDao.search(searchQuery);
         log.info("====testQuery===functionScoreQueryBuilder===={}", JSON.toJSONString(recItemIterable.iterator()));
 
+
+        calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(QueryBuilders.rangeQuery("createTime").gte(calendar.getTime().getTime()).lte(new Date().getTime()))
+                .withPageable(PageRequest.of(0, 100))
+                .withSort(SortBuilders.scoreSort().order(SortOrder.DESC))
+                .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC))
+                .withIndices("liaozl")
+                .withTypes("liaozl_rec_item")
+                .build();
+
+        List<String> idList = elasticsearchTemplate.queryForIds(searchQuery);
+        log.info("====testQuery===queryForIds===={}", JSON.toJSONString(idList));
     }
 
     @Test
