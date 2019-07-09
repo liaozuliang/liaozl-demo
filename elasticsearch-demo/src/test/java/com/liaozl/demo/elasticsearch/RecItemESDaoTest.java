@@ -2,6 +2,7 @@ package com.liaozl.demo.elasticsearch;
 
 import com.alibaba.fastjson.JSON;
 import com.liaozl.demo.elasticsearch.dto.Channel;
+import com.liaozl.demo.elasticsearch.es.dao.EsCommonDao;
 import com.liaozl.demo.elasticsearch.es.dao.RecItemESDao;
 import com.liaozl.demo.elasticsearch.es.entity.RecItem;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description:
@@ -63,6 +66,9 @@ public class RecItemESDaoTest {
 
     @Autowired
     private ElasticsearchTemplate elasticsearchTemplate;
+
+    @Autowired
+    private EsCommonDao esCommonDao;
 
     @Test
     public void testSave() {
@@ -139,6 +145,16 @@ public class RecItemESDaoTest {
         recItemList.add(item);
 
         recItemESDao.saveAll(recItemList);
+    }
+
+    @Test
+    public void testUpdate() {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("newsId", 1111);
+        dataMap.put("newField", new Date());
+
+        String id = esCommonDao.update(RecItem.class, dataMap, "2");
+        log.info("============testUpdate==============={}", id);
     }
 
     @Test
