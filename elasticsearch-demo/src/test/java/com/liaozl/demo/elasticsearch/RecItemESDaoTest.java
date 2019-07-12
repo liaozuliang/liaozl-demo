@@ -15,6 +15,7 @@ import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
@@ -385,6 +386,15 @@ public class RecItemESDaoTest {
 
         recItemIterable = recItemESDao.search(boolQueryBuilder);
         log.info("====testQuery===boolQuery===={}", JSON.toJSONString(recItemIterable.iterator()));
+
+        // 一次匹配多个词
+        MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("keywords", "文化 民俗 中国");
+        matchQueryBuilder.operator(Operator.OR); // 文化 or 民俗 or 中国
+        matchQueryBuilder.operator(Operator.AND); // 文化 and 民俗 and 中国
+        matchQueryBuilder.minimumShouldMatch("70%");// 指定匹配度
+
+        recItemIterable = recItemESDao.search(matchQueryBuilder);
+        log.info("====testQuery===matchQueryBuilder===={}", JSON.toJSONString(recItemIterable.iterator()));
     }
 
     @Test
