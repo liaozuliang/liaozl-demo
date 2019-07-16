@@ -3,7 +3,6 @@ package com.liaozl.demo.neo4j.neo4j.node;
 import com.liaozl.demo.neo4j.neo4j.relationship.Relations;
 import lombok.Data;
 import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Properties;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 

@@ -1,10 +1,12 @@
 package com.liaozl.demo.neo4j;
 
+import com.alibaba.fastjson.JSON;
 import com.liaozl.demo.neo4j.neo4j.dao.ParentNeo4jDao;
 import com.liaozl.demo.neo4j.neo4j.dao.RelationDao;
 import com.liaozl.demo.neo4j.neo4j.dao.SchoolNeo4jDao;
 import com.liaozl.demo.neo4j.neo4j.dao.StudentNeo4jDao;
 import com.liaozl.demo.neo4j.neo4j.dao.TeacherNeo4jDao;
+import com.liaozl.demo.neo4j.neo4j.node.BaseRelation;
 import com.liaozl.demo.neo4j.neo4j.node.Parent;
 import com.liaozl.demo.neo4j.neo4j.node.School;
 import com.liaozl.demo.neo4j.neo4j.node.Student;
@@ -18,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -182,7 +185,65 @@ public class Neo4jDemoApplicationTests {
     }
 
     @Test
-    public void testQuery() {
+    public void testSchoolNeo4jDao() {
+        List<School> schoolList = schoolNeo4jDao.findByName("北京大学");
+        log.info("========testSchoolNeo4jDao=====findByName==={}", JSON.toJSONString(schoolList));
+
+        schoolList = schoolNeo4jDao.findByNameEndingWith("大学");
+        log.info("========testSchoolNeo4jDao=====findByNameEndingWith==={}", JSON.toJSONString(schoolList));
+
+        schoolList = schoolNeo4jDao.findByParent("家长B");
+        log.info("========testSchoolNeo4jDao=====findByParent==={}", JSON.toJSONString(schoolList));
+
+        List<Teacher> teacherList = schoolNeo4jDao.findTeachersBySchoolName("北京大学");
+        log.info("========testSchoolNeo4jDao=====findTeachersBySchoolName==={}", JSON.toJSONString(teacherList));
+
+        List<Student> studentList = schoolNeo4jDao.findStudentsBySchoolName("北京大学");
+        log.info("========testSchoolNeo4jDao=====findStudentsBySchoolName==={}", JSON.toJSONString(studentList));
+
+        studentList = schoolNeo4jDao.findStudentsBySchoolName2("北京大学");
+        log.info("========testSchoolNeo4jDao=====findStudentsBySchoolName2==={}", JSON.toJSONString(studentList));
     }
 
+    @Test
+    public void testTeacherNeo4jDao() {
+        List<Teacher> teacherList = teacherNeo4jDao.findByIdIn(Arrays.asList(45L, 47L));
+        log.info("============testTeacherNeo4jDao==========findByIdIn================{}", JSON.toJSONString(teacherList));
+
+        teacherList = teacherNeo4jDao.findByStudent("学生2");
+        log.info("============testTeacherNeo4jDao==========findByStudent================{}", JSON.toJSONString(teacherList));
+    }
+
+    @Test
+    public void testStudentNeo4jDao() {
+        List<Student> studentList = studentNeo4jDao.findByAgeBetween(20, 30);
+        log.info("===========testStudentNeo4jDao=========findByAgeBetween==========={}", JSON.toJSONString(studentList));
+
+        studentList = studentNeo4jDao.findByTeacher("张老师");
+        log.info("===========testStudentNeo4jDao=========findByTeacher==========={}", JSON.toJSONString(studentList));
+
+        studentList = studentNeo4jDao.findByParent("家长A");
+        log.info("===========testStudentNeo4jDao=========findByParent==========={}", JSON.toJSONString(studentList));
+    }
+
+    @Test
+    public void testParentNeo4jDao() {
+        List<Parent> parentList = parentNeo4jDao.findBySchool("北京大学");
+        log.info("=========testParentNeo4jDao=========findBySchool==========={}", JSON.toJSONString(parentList));
+
+        parentList = parentNeo4jDao.findByStudent("学生4");
+        log.info("=========testParentNeo4jDao=========findByStudent==========={}", JSON.toJSONString(parentList));
+
+        parentList = parentNeo4jDao.findByFriends("家长cc", "张老师");
+        log.info("=========testParentNeo4jDao=========findByFriends==========={}", JSON.toJSONString(parentList));
+
+        parentList = parentNeo4jDao.findByFriends("家长A", "张老师");
+        log.info("=========testParentNeo4jDao=========findByFriends2==========={}", JSON.toJSONString(parentList));
+    }
+
+    @Test
+    public void testRelationDao() {
+        List<BaseRelation> relationList = relationDao.findFriendRelation();
+        log.info("===========testRelationDao=============relationList=============={}", JSON.toJSONString(relationList));
+    }
 }

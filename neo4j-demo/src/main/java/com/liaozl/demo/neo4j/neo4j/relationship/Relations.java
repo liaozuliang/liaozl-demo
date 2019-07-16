@@ -11,8 +11,8 @@ public interface Relations {
     // A是B的朋友
     String IS_FRIEND_OF = "IS_FRIEND_OF";
 
-    // A是B的老师
-    String IS_TEACHER_OF = "IS_TEACHER_OF";
+    // A是B的学生
+    String IS_STUDENT_OF = "IS_STUDENT_OF";
 
     // 毕业于
     String GRADUATE_FROM = "GRADUATE_FROM";

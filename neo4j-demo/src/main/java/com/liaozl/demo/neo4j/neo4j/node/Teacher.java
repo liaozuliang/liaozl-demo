@@ -3,7 +3,6 @@ package com.liaozl.demo.neo4j.neo4j.node;
 import com.liaozl.demo.neo4j.neo4j.relationship.Relations;
 import lombok.Data;
 import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Properties;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 
@@ -27,6 +26,6 @@ public class Teacher extends BaseNode {
     @Relationship(type = Relations.GRADUATE_FROM, direction = Relationship.OUTGOING)
     private List<School> graduateFromSchoolList;
 
-    @Relationship(type = Relations.IS_TEACHER_OF, direction = Relationship.INCOMING)
+    @Relationship(type = Relations.IS_STUDENT_OF, direction = Relationship.INCOMING)
     private List<Student> studentList;
 }
