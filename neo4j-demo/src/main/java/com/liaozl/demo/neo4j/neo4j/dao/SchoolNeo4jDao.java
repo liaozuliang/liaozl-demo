@@ -10,4 +10,5 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
  * @date: 2019/7/15 12:15
  */
 public interface SchoolNeo4jDao extends Neo4jRepository<School, Long> {
+
 }

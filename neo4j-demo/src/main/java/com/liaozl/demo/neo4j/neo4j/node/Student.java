@@ -36,6 +36,4 @@ public class Student extends BaseNode {
 
     @Relationship(type = Relations.IS_CHILD_OF, direction = Relationship.OUTGOING)
     private List<Parent> parentList;
-
-    private List<Teacher> teacherList;
 }

@@ -24,10 +24,9 @@ public class Teacher extends BaseNode {
 
     private Byte sex;
 
-    @Relationship(type = Relations.GRADUATE_FROM, direction = Relationship.INCOMING)
+    @Relationship(type = Relations.GRADUATE_FROM, direction = Relationship.OUTGOING)
     private List<School> graduateFromSchoolList;
 
     @Relationship(type = Relations.IS_TEACHER_OF, direction = Relationship.INCOMING)
     private List<Student> studentList;
-
 }

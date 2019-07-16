@@ -21,10 +21,6 @@ public class Parent extends BaseNode {
     @Property
     private String name;
 
-    @Relationship(type = Relations.GRADUATE_FROM, direction = Relationship.INCOMING)
+    @Relationship(type = Relations.GRADUATE_FROM, direction = Relationship.OUTGOING)
     private List<School> graduateFromSchoolList;
-
-    private List<Student> children;
-
-    private List<BaseNode> friendList;
 }
