@@ -395,6 +395,32 @@ public class RecItemESDaoTest {
 
         recItemIterable = recItemESDao.search(matchQueryBuilder);
         log.info("====testQuery===matchQueryBuilder===={}", JSON.toJSONString(recItemIterable.iterator()));
+
+        // in
+        nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+        nativeSearchQueryBuilder.withQuery(QueryBuilders.termsQuery("id", Arrays.asList("1", "3")));
+        recItemIterable = recItemESDao.search(nativeSearchQueryBuilder.build());
+        log.info("====testQuery===in query===={}", JSON.toJSONString(recItemIterable.iterator()));
+
+        // not in
+        boolQueryBuilder = new BoolQueryBuilder();
+        boolQueryBuilder.mustNot(QueryBuilders.termsQuery("id", Arrays.asList("1", "3")));
+        recItemIterable = recItemESDao.search(boolQueryBuilder);
+        log.info("====testQuery===not in query===={}", JSON.toJSONString(recItemIterable.iterator()));
+
+        // or
+        boolQueryBuilder = new BoolQueryBuilder();
+        boolQueryBuilder.should(QueryBuilders.termQuery("id", "1"));
+        boolQueryBuilder.should(QueryBuilders.termQuery("id", "2"));
+        recItemIterable = recItemESDao.search(boolQueryBuilder);
+        log.info("====testQuery===or query===={}", JSON.toJSONString(recItemIterable.iterator()));
+
+        // and
+        boolQueryBuilder = new BoolQueryBuilder();
+        boolQueryBuilder.must(QueryBuilders.matchQuery("channelList.name", "军事"));
+        boolQueryBuilder.must(QueryBuilders.termQuery("itemId", "1"));
+        recItemIterable = recItemESDao.search(boolQueryBuilder);
+        log.info("====testQuery===and query===={}", JSON.toJSONString(recItemIterable.iterator()));
     }
 
     @Test
