@@ -35,6 +35,7 @@
         <module>disconf-demo</module>
         <module>elasticsearch-demo</module>
         <module>storm-demo</module>
+        <module>redis-demo</module>
     </modules>
 
     <dependencies>
