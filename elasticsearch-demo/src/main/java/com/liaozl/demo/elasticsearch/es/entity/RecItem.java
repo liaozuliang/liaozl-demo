@@ -10,6 +10,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.GeoPointField;
+import org.springframework.data.elasticsearch.annotations.Score;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,12 @@ public class RecItem extends EsBaseEntity {
 
     @Id
     private String id;
+
+    /**
+     * 排序分值
+     */
+    @Score
+    private Float score;
 
     // Keyword类型只能精确查询
     @Field(type = FieldType.Keyword)
