@@ -342,6 +342,7 @@ public class RecItemESDaoTest {
                 .withPageable(PageRequest.of(0, 100))
                 .withSort(SortBuilders.scoreSort().order(SortOrder.DESC))
                 .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC))
+                .withMinScore(0) // 最小排序分值
                 .withQuery(functionScoreQueryBuilder).build();
 
         recItemIterable = recItemESDao.search(searchQuery);
