@@ -1,0 +1,18 @@
+server:
+  port: 8882
+  servlet:
+    context-path: "/client1"
+
+security:
+  oauth2:
+    client:
+      client-id: "client1"
+      client-secret: "client1-123"
+      user-authorization-uri: "http://localhost:8881/oauthServer/oauth/authorize"
+      access-token-uri: "http://localhost:8881/oauthServer/oauth/token"
+
+    resource:
+      jwt:
+        key-uri: "http://localhost:8881/oauthServer/oauth/token_key"
+
+

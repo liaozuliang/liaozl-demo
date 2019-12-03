@@ -39,6 +39,7 @@
         <module>hadoop-demo</module>
         <module>hbase-demo</module>
         <module>hive-demo</module>
+        <module>oauth2-sso</module>
     </modules>
 
     <dependencies>
