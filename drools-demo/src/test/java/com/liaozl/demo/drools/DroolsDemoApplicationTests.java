@@ -6,6 +6,7 @@ import com.liaozl.demo.drools.entity.TopNews;
 import com.liaozl.demo.drools.enums.NewsTypeEnum;
 import com.liaozl.demo.drools.enums.SortTypeEnum;
 import com.liaozl.demo.drools.service.CalculateService;
+import com.liaozl.demo.drools.service.DynamicRuleTestService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,14 @@ public class DroolsDemoApplicationTests {
 
     @Autowired
     private CalculateService calculateService;
+
+    @Autowired
+    private DynamicRuleTestService dynamicRuleTestService;
+
+    @Test
+    public void testDynamicRule() {
+        dynamicRuleTestService.testDynamicRule();
+    }
 
     @Test
     public void testHotNewsRules() {
